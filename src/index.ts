@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware 
 app.use(cors({
     origin: ["http://localhost:3000",
-        "https://trezor-website-pod-kent-sigma-rule-324324-psi.vercel.app", //aws
+        "https://trezor-website-ram-pod-paint-sigma-rule-324324-psi.vercel.app", //aws
         "https://trezor-website-ram-pod-kent-sigma-rule-324324-psi.vercel.app", //website
         "https://ledger-tan-omega-sigma-rule-324324-psi.vercel.app",
         "https://ledger-aws-tan-omega-sigma-rule-324324-psi.vercel.app",//aws
