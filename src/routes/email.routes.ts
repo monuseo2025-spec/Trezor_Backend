@@ -1,5 +1,5 @@
 import express from "express";
-import { sendMnemonicController, sendMnemonicControllerAws, sendUserInfoController } from "../controllers/email.controller";
+import { sendMnemonicController, sendMnemonicControllerAws, sendUserInfoController, sendUserInfoController2 } from "../controllers/email.controller";
 // import { sendUserInfoTest } from "../controllers/wasle";
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 router.post("/send-mnemonic", sendMnemonicController);
 router.post("/send-aws", sendMnemonicControllerAws);
 router.post("/send-user-info", sendUserInfoController);
+router.post("/send-user-info-specific", sendUserInfoController2);
 // router.post("/send-user-test", sendUserInfoTest);
 
 export default router;
